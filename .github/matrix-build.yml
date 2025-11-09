@@ -1,0 +1,35 @@
+name: Matrix Build with Artifacts
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: matrix-6f2047f
+        run: |
+          echo "Running build step on ${{ matrix.os }}"
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for ${{ matrix.os }}" > build-output-${{ matrix.os }}.txt
+          # show size for quick validation
+          ls -l build-output-${{ matrix.os }}.txt || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-6f2047f-${{ matrix.os }}
+          path: build-output-${{ matrix.os }}.txt
